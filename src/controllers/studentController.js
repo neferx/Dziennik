@@ -12,6 +12,10 @@ function userExists(id) {
   return exists;
 }
 
+function test() {
+  return 0;
+}
+
 export const addNewStudent = async (req, res) => {
   let {
     idStudent,
