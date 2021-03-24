@@ -16,8 +16,8 @@ INSERT INTO "Parent" ("idParent", "telephoneNumber") VALUES(6, 456123789);
 `;
 
 export const createTeacherSeeds = `
-INSERT INTO "Teacher" ("idTeacher") VALUES(5);
-INSERT INTO "Teacher" ("idTeacher") VALUES(6);
+INSERT INTO "Teacher" ("idTeacher","telephoneNumber") VALUES(5,997997997);
+INSERT INTO "Teacher" ("idTeacher","telephoneNumber") VALUES(6,123456789);
 `;
 
 export const createClassSeeds = `
@@ -28,4 +28,11 @@ export const createStudentSeeds = `
 INSERT INTO "Student" ("idStudent","PESEL","city","street","buildingNumber","classRegisterNumber","ParentID","classID") VALUES(1,12345678911,'Boronów','Leśna',7,1,6,1);
 INSERT INTO "Student" ("idStudent","PESEL","city","street","buildingNumber","classRegisterNumber","ParentID","classID") VALUES(2,12345678912,'Boronów','Pocztowa',14,2,7,1);
 INSERT INTO "Student" ("idStudent","PESEL","city","street","buildingNumber","classRegisterNumber","ParentID","classID") VALUES(3,12345678913,'Przybynów','Kamienna',189,3,8,1);
+`;
+
+export const createSubjectSeeds = `
+INSERT INTO "Subject" ("subjectName") VALUES('polski');
+INSERT INTO "Subject" ("subjectName") VALUES('angielski');
+INSERT INTO "Subject" ("subjectName") VALUES('matematyka');
+INSERT INTO "Subject" ("subjectName") VALUES('geografia');
 `;

@@ -21,7 +21,7 @@ CREATE TABLE "Student" (
 	"buildingNumber" integer NOT NULL,
 	"classRegisterNumber" integer NOT NULL,
 	"ParentID" integer,
-	"classID" integer NOT NULL,
+	"classID" integer,
 	CONSTRAINT "Student_pk" PRIMARY KEY ("idStudent")
 ) WITH (
   OIDS=FALSE
@@ -48,8 +48,7 @@ CREATE TABLE "Teacher" (
 export const createSubjectTable = `
 CREATE TABLE "Subject" (
 	"idSubject" serial NOT NULL,
-	"TeacherID" serial,
-	"subjectName" varchar(255) NOT NULL,
+	"subjectName" varchar(255) NOT NULL UNIQUE,
 	CONSTRAINT "Subject_pk" PRIMARY KEY ("idSubject")
 ) WITH (
   OIDS=FALSE
@@ -62,7 +61,7 @@ CREATE TABLE "Grades" (
 	"StudentID" integer NOT NULL,
 	"grade" integer NOT NULL,
 	"gradeType" varchar(255) NOT NULL,
-	"weight" varchar(255) NOT NULL,
+	"weight" integer,
 	CONSTRAINT "Grades_pk" PRIMARY KEY ("idGrades")
 ) WITH (
   OIDS=FALSE
@@ -112,37 +111,47 @@ CREATE TABLE "AbsentNotes" (
   OIDS=FALSE
 )`;
 
-export const alterTable = `
-ALTER TABLE "User" ADD CONSTRAINT "User_check_role"  CHECK ("role" = 'ADMIN' OR "role" = 'TEACHER' OR "role" = 'PARENT' OR "role" = 'STUDENT' or "role" = '');
-ALTER TABLE "Student" ADD CONSTRAINT "Student_fk0" FOREIGN KEY ("idStudent") REFERENCES "User"("id") ON DELETE CASCADE;
-ALTER TABLE "Student" ADD CONSTRAINT "Student_fk1" FOREIGN KEY ("ParentID") REFERENCES "Parent"("idParent") ON DELETE SET NULL;
-ALTER TABLE "Student" ADD CONSTRAINT "Student_fk2" FOREIGN KEY ("classID") REFERENCES "Class"("idClass");
+export const createTeachersSubjects = `CREATE TABLE "TeachersSubjects" (
+	"subjectID" serial NOT NULL,
+	"TeacherID" integer NOT NULL
+) WITH (
+  OIDS=FALSE
+);`;
 
-ALTER TABLE "Parent" ADD CONSTRAINT "Parent_fk0" FOREIGN KEY ("idParent") REFERENCES "User"("id");
 
-ALTER TABLE "Teacher" ADD CONSTRAINT "Teacher_fk0" FOREIGN KEY ("idTeacher") REFERENCES "User"("id") ON DELETE CASCADE;
+// export const alterTable = `
+// ALTER TABLE "User" ADD CONSTRAINT "User_check_role"  CHECK ("role" = 'ADMIN' OR "role" = 'TEACHER' OR "role" = 'PARENT' OR "role" = 'STUDENT' or "role" = '')
+// ALTER TABLE "Student" ADD CONSTRAINT "Student_fk0" FOREIGN KEY ("idStudent") REFERENCES "User"("id") ON DELETE CASCADE
+// ALTER TABLE "Student" ADD CONSTRAINT "Student_fk1" FOREIGN KEY ("ParentID") REFERENCES "Parent"("idParent") ON DELETE SET NULL
+// ALTER TABLE "Student" ADD CONSTRAINT "Student_fk2" FOREIGN KEY ("classID") REFERENCES "Class"("idClass")
 
-ALTER TABLE "Subject" ADD CONSTRAINT "Subject_fk0" FOREIGN KEY ("TeacherID") REFERENCES "Teacher"("idTeacher") ON DELETE SET NULL;
+// ALTER TABLE "Parent" ADD CONSTRAINT "Parent_fk0" FOREIGN KEY ("idParent") REFERENCES "User"("id")
 
-ALTER TABLE "Grades" ADD CONSTRAINT "Grades_fk0" FOREIGN KEY ("SubjectID") REFERENCES "Subject"("idSubject");
-ALTER TABLE "Grades" ADD CONSTRAINT "Grades_fk1" FOREIGN KEY ("StudentID") REFERENCES "Student"("idStudent") ON DELETE CASCADE;
+// ALTER TABLE "Teacher" ADD CONSTRAINT "Teacher_fk0" FOREIGN KEY ("idTeacher") REFERENCES "User"("id") ON DELETE CASCADE
 
-ALTER TABLE "Class" ADD CONSTRAINT "Class_fk0" FOREIGN KEY ("teacherID") REFERENCES "Teacher"("idTeacher");
+// ALTER TABLE "Subject" ADD CONSTRAINT "Subject_fk0" FOREIGN KEY ("TeacherID") REFERENCES "Teacher"("idTeacher") ON DELETE SET NULL
 
-ALTER TABLE "Absence" ADD CONSTRAINT "Absence_fk0" FOREIGN KEY ("SubjectID") REFERENCES "Subject"("idSubject");
-ALTER TABLE "Absence" ADD CONSTRAINT "Absence_fk1" FOREIGN KEY ("studentID") REFERENCES "Student"("idStudent") ON DELETE CASCADE;
+// ALTER TABLE "Grades" ADD CONSTRAINT "Grades_fk0" FOREIGN KEY ("SubjectID") REFERENCES "Subject"("idSubject")
+// ALTER TABLE "Grades" ADD CONSTRAINT "Grades_fk1" FOREIGN KEY ("StudentID") REFERENCES "Student"("idStudent") ON DELETE CASCADE
 
-ALTER TABLE "Remarks" ADD CONSTRAINT "Remarks_fk0" FOREIGN KEY ("studentID") REFERENCES "Student"("idStudent") ON DELETE CASCADE;
-ALTER TABLE "Remarks" ADD CONSTRAINT "Remarks_fk1" FOREIGN KEY ("teacherID") REFERENCES "Teacher"("idTeacher") ON DELETE SET NULL;
+// ALTER TABLE "Class" ADD CONSTRAINT "Class_fk0" FOREIGN KEY ("teacherID") REFERENCES "Teacher"("idTeacher")
 
-ALTER TABLE "absentNotes" ADD CONSTRAINT "absentNotes_fk0" FOREIGN KEY ("parentID") REFERENCES "Parent"("idParent") ON DELETE SET NULL;
-ALTER TABLE "absentNotes" ADD CONSTRAINT "absentNotes_fk1" FOREIGN KEY ("absenceID") REFERENCES "Absence"("idAbsence");`;
+// ALTER TABLE "Absence" ADD CONSTRAINT "Absence_fk0" FOREIGN KEY ("SubjectID") REFERENCES "Subject"("idSubject")
+// ALTER TABLE "Absence" ADD CONSTRAINT "Absence_fk1" FOREIGN KEY ("studentID") REFERENCES "Student"("idStudent") ON DELETE CASCADE
 
-export const insertMessages = `
-INSERT INTO messages(name, message)
-VALUES ('chidimo', 'first message'),
-      ('orji', 'second message')
-`;
+// ALTER TABLE "Remarks" ADD CONSTRAINT "Remarks_fk0" FOREIGN KEY ("studentID") REFERENCES "Student"("idStudent") ON DELETE CASCADE
+// ALTER TABLE "Remarks" ADD CONSTRAINT "Remarks_fk1" FOREIGN KEY ("teacherID") REFERENCES "Teacher"("idTeacher") ON DELETE SET NULL
 
-export const dropMessagesTable =
-  'DROP TABLE "User", DROP TABLE "Parent", DROP TABLE "Student"';
+// ALTER TABLE "absentNotes" ADD CONSTRAINT "absentNotes_fk0" FOREIGN KEY ("parentID") REFERENCES "Parent"("idParent") ON DELETE SET NULL
+// ALTER TABLE "absentNotes" ADD CONSTRAINT "absentNotes_fk1" FOREIGN KEY ("absenceID") REFERENCES "Absence"("idAbsence")
+// ALTER TABLE "TeachersSubjects" ADD CONSTRAINT "TeachersSubjects_fk0" FOREIGN KEY ("subjectID") REFERENCES "Subject"("idSubject")
+// ALTER TABLE "TeachersSubjects" ADD CONSTRAINT "TeachersSubjects_fk1" FOREIGN KEY ("TeacherID") REFERENCES "Teacher"("idTeacher")`;
+
+// export const insertMessages = `
+// INSERT INTO messages(name, message)
+// VALUES ('chidimo', 'first message'),
+//       ('orji', 'second message')
+// `;
+
+// export const dropMessagesTable =
+//   'DROP TABLE "User", DROP TABLE "Parent", DROP TABLE "Student"';

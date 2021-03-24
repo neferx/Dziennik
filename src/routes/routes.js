@@ -13,6 +13,7 @@ import {
   getStudentByID,
   changeUserRoleByID,
   changeUserEmailByID,
+  getAllUsers,
   addNewClass,
   changeClassNameByID,
   changeClassTeacher,
@@ -22,6 +23,20 @@ import {
   getAllStudents,
   getAllStudentsWithoutClass,
   addNewParent,
+  addNewTeacher,
+  getAllTeachers,
+  changeTeacherTelephoneNumberByID,
+  getAllTeachersAssginedToClass,
+  addNewRemark,
+  deleteRemarkByID,
+  getAllRemarks,
+  getAllRemarksByStudentID,
+  deleteStudentByID,
+  editStudentByID,
+  editUserByID,
+  addNewSubject,
+  getAllSubjects,
+  deleteSubjectByID
 } from '../controllers';
 const indexRouter = express.Router();
 
@@ -29,9 +44,10 @@ indexRouter.get('/', indexPage);
 indexRouter.get('/testowy', testowy);
 indexRouter.post('/Login', login);
 indexRouter.post('/Register', register);
-indexRouter.post('/ChangePassword', authenticateJWT, changePassword); //dodac do pozostalych authenticateJWT
+indexRouter.patch('/ChangePassword', authenticateJWT, changePassword); //dodac do pozostalych authenticateJWT
 indexRouter.post('/ChangeUserRoleByID', changeUserRoleByID);
 indexRouter.post('/ChangeUserEmailByID', changeUserEmailByID);
+indexRouter.patch('/EditUserByID', editUserByID);
 indexRouter.get('/GetAllStudentsFromClassByID', getAllStudentsFromClassByID);
 indexRouter.get('/GetParentByStudentsID', getParentByStudentsId);
 indexRouter.get('/GetAllParentsByClassID', getAllParentsByClassID);
@@ -46,5 +62,19 @@ indexRouter.get('/GetClassAndTeacherByID', getClassAndTeacherByID);
 indexRouter.post('/AddNewStudent', addNewStudent);
 indexRouter.get('/GetAllStudents', getAllStudents);
 indexRouter.get('/GetAllStudentsWithoutClass', getAllStudentsWithoutClass);
+indexRouter.patch('/EditStudentByID', editStudentByID);
+indexRouter.delete('/DeleteStudentByID', deleteStudentByID);
+indexRouter.post('/AddNewTeacher', addNewTeacher);
+indexRouter.get('/GetAllTeachers', getAllTeachers);
+indexRouter.get('/getAllTeachersAssginedToClass', getAllTeachersAssginedToClass);
+indexRouter.post('/ChangeTeacherTelephoneNumberByID', changeTeacherTelephoneNumberByID);
+indexRouter.get('/GetAllUsers', getAllUsers);
+indexRouter.post('/AddNewRemark', addNewRemark);
+indexRouter.delete('/DeleteRemarkByID', deleteRemarkByID);
+indexRouter.get('/GetAllRemarks', getAllRemarks);
+indexRouter.get('/GetAllRemarksByStudentID', getAllRemarksByStudentID);
+indexRouter.post('/AddNewSubject', addNewSubject);
+indexRouter.get('/GetAllSubjects', getAllSubjects);
+indexRouter.delete('/DeleteSubjectByID', deleteSubjectByID);
 
 export default indexRouter;
