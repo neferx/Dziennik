@@ -36,7 +36,9 @@ import {
   editUserByID,
   addNewSubject,
   getAllSubjects,
-  deleteSubjectByID
+  deleteSubjectByID,
+  assignNewSubjectToTeacherByID,
+  deleteTeachersSubjectByIDs
 } from '../controllers';
 const indexRouter = express.Router();
 
@@ -76,5 +78,9 @@ indexRouter.get('/GetAllRemarksByStudentID', getAllRemarksByStudentID);
 indexRouter.post('/AddNewSubject', addNewSubject);
 indexRouter.get('/GetAllSubjects', getAllSubjects);
 indexRouter.delete('/DeleteSubjectByID', deleteSubjectByID);
+indexRouter.post('/AssignNewSubjectToTeacherByID', assignNewSubjectToTeacherByID);
+indexRouter.delete('/DeleteTeachersSubjectByIDs', deleteTeachersSubjectByIDs);
+
+
 
 export default indexRouter;

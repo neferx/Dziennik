@@ -6,3 +6,4 @@ export * from './classController';
 export * from './teacherController';
 export * from './remarkController';
 export * from './subjectController';
+export * from './teachersSubjectsController';

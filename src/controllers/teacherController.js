@@ -99,3 +99,7 @@ function userExists(id) {
       }
     );
   };
+
+
+//   select "name","lastname","subjectName" from "TeachersSubjects" join "User" on "TeachersSubjects"."teacherID"="User"."id"
+// join "Subject" on "TeachersSubjects"."subjectID"="Subject"."idSubject"  ---moze sie przydac

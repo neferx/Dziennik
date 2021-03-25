@@ -112,8 +112,8 @@ CREATE TABLE "AbsentNotes" (
 )`;
 
 export const createTeachersSubjects = `CREATE TABLE "TeachersSubjects" (
-	"subjectID" serial NOT NULL,
-	"TeacherID" integer NOT NULL
+	"teacherID" integer NOT NULL,
+	"subjectID" integer NOT NULL
 ) WITH (
   OIDS=FALSE
 );`;
