@@ -71,8 +71,9 @@ export const createTables = () =>
 
     ALTER TABLE "Teacher" ADD CONSTRAINT "Teacher_fk0" FOREIGN KEY ("idTeacher") REFERENCES "User"("id") ON DELETE CASCADE;
     
-    ALTER TABLE "Grades" ADD CONSTRAINT "Grades_fk0" FOREIGN KEY ("SubjectID") REFERENCES "Subject"("idSubject");
-    ALTER TABLE "Grades" ADD CONSTRAINT "Grades_fk1" FOREIGN KEY ("StudentID") REFERENCES "Student"("idStudent") ON DELETE CASCADE;
+    ALTER TABLE "Grades" ADD CONSTRAINT "Grades_fk0" FOREIGN KEY ("subjectID") REFERENCES "Subject"("idSubject");
+    ALTER TABLE "Grades" ADD CONSTRAINT "Grades_fk1" FOREIGN KEY ("studentID") REFERENCES "Student"("idStudent") ON DELETE CASCADE;
+    ALTER TABLE "Grades" ADD CONSTRAINT "Grades_fk2" FOREIGN KEY ("teacherID") REFERENCES "Teacher"("idTeacher") ON DELETE SET NULL;
 
     ALTER TABLE "Class" ADD CONSTRAINT "Class_fk0" FOREIGN KEY ("teacherID") REFERENCES "Teacher"("idTeacher");
 

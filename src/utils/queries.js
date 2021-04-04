@@ -57,9 +57,10 @@ CREATE TABLE "Subject" (
 export const createGradesTable = `
 CREATE TABLE "Grades" (
 	"idGrades" serial NOT NULL,
-	"SubjectID" integer NOT NULL,
-	"StudentID" integer NOT NULL,
-	"grade" integer NOT NULL,
+	"subjectID" integer NOT NULL,
+	"studentID" integer NOT NULL,
+	"teacherID" integer NOT NULL,
+	"grade" FLOAT NOT NULL,
 	"gradeType" varchar(255) NOT NULL,
 	"weight" integer,
 	CONSTRAINT "Grades_pk" PRIMARY KEY ("idGrades")

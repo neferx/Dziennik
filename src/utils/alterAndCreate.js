@@ -22,6 +22,6 @@ import {
     await createStudentSeed();
     console.log("Created student Seed");
     await createSubjectSeed();
-    console.log("Created student Seed");
+    console.log("Created subject Seed");
   })();
   

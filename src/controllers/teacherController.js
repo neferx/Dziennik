@@ -100,6 +100,28 @@ function userExists(id) {
     );
   };
 
+  export const getAllTeachersSubjectsByID = (req, res) => {
+    let { idTeacher } = req.body;
+    let teachersSubjectsList;
+    pool.connect((err, client, release) => {
+      if (err) {
+        return console.error('Error acquiring client', err.stack);
+      }
+      client
+        .query(
+          `select "teacherID", "name","lastname","subjectName" from "TeachersSubjects" join "User" on "TeachersSubjects"."teacherID"="User"."id"
+          join "Subject" on "TeachersSubjects"."subjectID"="Subject"."idSubject" where "teacherID"=${idTeacher} `
+        )
+        .then((resQ) => {
+          release();
+          teachersSubjectsList = resQ.rows;
+          console.log(teachersSubjectsList);
+          return res
+            .status(200)
+            .json({ message: "All teacher's subjects", teachersSubjectsList });
+        });
+    });
+  };
 
-//   select "name","lastname","subjectName" from "TeachersSubjects" join "User" on "TeachersSubjects"."teacherID"="User"."id"
-// join "Subject" on "TeachersSubjects"."subjectID"="Subject"."idSubject"  ---moze sie przydac
+
+  
