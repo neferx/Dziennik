@@ -86,8 +86,8 @@ export const createTables = () =>
     ALTER TABLE "AbsentNotes" ADD CONSTRAINT "absentNotes_fk0" FOREIGN KEY ("parentID") REFERENCES "Parent"("idParent") ON DELETE SET NULL;
     ALTER TABLE "AbsentNotes" ADD CONSTRAINT "absentNotes_fk1" FOREIGN KEY ("absenceID") REFERENCES "Absence"("idAbsence");
 
-    ALTER TABLE "TeachersSubjects" ADD CONSTRAINT "TeachersSubjects_fk0" FOREIGN KEY ("subjectID") REFERENCES "Subject"("idSubject") ON DELETE SET NULL;
-    ALTER TABLE "TeachersSubjects" ADD CONSTRAINT "TeachersSubjects_fk1" FOREIGN KEY ("teacherID") REFERENCES "Teacher"("idTeacher") ON DELETE SET NULL;`
+    ALTER TABLE "TeachersSubjects" ADD CONSTRAINT "TeachersSubjects_fk0" FOREIGN KEY ("subjectID") REFERENCES "Subject"("idSubject") ON DELETE CASCADE;
+    ALTER TABLE "TeachersSubjects" ADD CONSTRAINT "TeachersSubjects_fk1" FOREIGN KEY ("teacherID") REFERENCES "Teacher"("idTeacher") ON DELETE CASCADE;`
   ]);
 
   // export const alterTables = () =>

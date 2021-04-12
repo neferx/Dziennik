@@ -70,8 +70,8 @@ export const changeClassTeacher = (req, res) => {
 };
 
 export const getClassByID = (req, res) => {
-  let { idClass } = req.body;
-  let classList;
+  let idClass = req.params.idClass;
+  let list;
   pool.connect((err, client, release) => {
     if (err) {
       return console.error('Error acquiring client', err.stack);
@@ -88,8 +88,8 @@ export const getClassByID = (req, res) => {
           if (resQ.rowCount == 0) {
             return res.status(200).json({ message: 'No class with given id' });
           } else {
-            classList = resQ.rows[0];
-            return res.status(200).json({ message: 'Class:', classList });
+            list = resQ.rows;
+            return res.status(200).json({ message: 'Class:', list });
           }
         }
       }

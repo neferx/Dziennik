@@ -19,7 +19,7 @@ CREATE TABLE "Student" (
 	"city" varchar(255) NOT NULL,
 	"street" varchar(255) NOT NULL,
 	"buildingNumber" integer NOT NULL,
-	"classRegisterNumber" integer NOT NULL,
+	"classRegisterNumber" integer,
 	"ParentID" integer,
 	"classID" integer,
 	CONSTRAINT "Student_pk" PRIMARY KEY ("idStudent")

@@ -40,18 +40,39 @@ function roleExists(id) {
 
 export const register = async (req, res) => {
   let { email, password, name, lastname, role } = req.body;
+  let user;
   password = crypto.createHash('sha256').update(password).digest('base64');
-  console.log(password);
+  role = role.toUpperCase();
   const emailExistsValidEmail = await emailExists(email);
   if (emailExistsValidEmail) {
     pool.query(
-      `INSERT INTO "User" ("email", "password", "name", "lastname", "role") VALUES('${email}', '${password}', '${name}', '${lastname}', '${role}')`,
-      () => {}
+      `INSERT INTO "User" ("email", "password", "name", "lastname", "role") VALUES('${email}', '${password}', '${name}', '${lastname}', '${role}')
+       RETURNING "User".id, "User".email, "User".name, "User".lastname, "User".role;`,
+      (err, resQ) => {
+        user = resQ.rows[0];
+        return res.status(200).json({ message: 'Register complete', user });
+      }
     );
-    return res.status(200).json({ message: 'Register complete' });
   } else {
     return res.status(409).json({ message: 'Email is already taken' });
   }
+};
+
+export const getAllUsers = (req, res) => {
+  let userList;
+  pool.connect((err, client, release) => {
+    if (err) {
+      return console.error('Error acquiring client', err.stack);
+    }
+    client
+      .query(`select "id","name","lastname", "email","role" from "User"`)
+      .then((resQ) => {
+        release();
+        userList = resQ.rows;
+        console.log(userList);
+        return res.status(200).json({ message: 'All users List', userList });
+      });
+  });
 };
 
 export const login = (req, res, next) => {
@@ -75,16 +96,19 @@ export const login = (req, res, next) => {
             resQ.rows[0].lastname,
             resQ.rows[0].email
           );
-          return res.status(200).json({ message: 'Authorized', token });
+          const user = resQ.rows[0];
+          return res.status(200).json({ message: 'Authorized', token, user });
         }
       }
     );
   });
 };
 
-function credentialsValid(id,oldPassword) {
+function credentialsValid(id, oldPassword) {
   let exists = pool
-    .query(`Select * from "User" where "id"=${id} and "password"='${oldPassword}' `)
+    .query(
+      `Select * from "User" where "id"=${id} and "password"='${oldPassword}' `
+    )
     .then((res) => {
       if (!res.rows[0]) {
         return false;
@@ -95,59 +119,81 @@ function credentialsValid(id,oldPassword) {
 }
 
 export const changePassword = async (req, res) => {
-  let { id, oldPassword,password } = req.body;
-  oldPassword = crypto.createHash('sha256').update(oldPassword).digest('base64');
+  let { id, oldPassword, password } = req.body;
+  oldPassword = crypto
+    .createHash('sha256')
+    .update(oldPassword)
+    .digest('base64');
   password = crypto.createHash('sha256').update(password).digest('base64');
-  const valid= await credentialsValid(id,oldPassword);
+  const valid = await credentialsValid(id, oldPassword);
   console.log(valid);
-  if (valid){
-  pool.query(
-    `update "User" set "password"='${password}' where "User".id=${id} and "password"='${oldPassword}'`,
-    (err) => {
-      if (!err) {
-        return res.status(200).json({ message: 'Changed password' });
-      } else {
-        return res.status(404).json({ message: "User doesn't exists or incorrect password" });
+  if (valid) {
+    pool.query(
+      `update "User" set "password"='${password}' where "User".id=${id} and "password"='${oldPassword}'`,
+      (err) => {
+        if (!err) {
+          return res.status(200).json({ message: 'Changed password' });
+        } else {
+          return res
+            .status(404)
+            .json({ message: "User doesn't exists or incorrect password" });
+        }
       }
+    );
+  } else {
+    return res.status(404).json({ message: 'Invalid password' });
+  }
+};
+
+export const getUserByID = (req, res) => {
+  let id = req.params.id;
+
+  let userList;
+  pool.connect((err, client, release) => {
+    if (err) {
+      return console.error('Error acquiring client', err.stack);
     }
-  );
-}
-else{
-  return res.status(404).json({ message: "Invalid password" });
-}
+    client
+      .query(
+        `select "id","email","name","lastname","role" from "User" where "User"."id"=${id};`
+      )
+      .then((resQ) => {
+        release();
+        userList = resQ.rows;
+        console.log(userList);
+        return res.status(200).json({ message: 'User: ', userList });
+      });
+  });
 };
 
 export const changeUserRoleByID = async (req, res) => {
   let { id, role } = req.body;
   role = role.toUpperCase();
-  const valid= await roleExists(id);
-  if(valid){
+  const valid = await roleExists(id);
+  if (valid) {
     pool.connect((err, client, release) => {
       if (err) {
         return console.error('Error acquiring client', err.stack);
       }
       client
-        .query(
-          `DELETE FROM "Student" WHERE "idStudent"=${id};`
-        )
+        .query(`DELETE FROM "Student" WHERE "idStudent"=${id};`)
         .then(() => {
           release();
-          console.log("Deleted student.");
+          console.log('Deleted student.');
         });
     });
-}
+  }
   pool.query(
     `update "User" set "role"='${role}' where "User"."id"=${id};`,
     (err, resQ) => {
       if (!err) {
-        if (resQ.rowCount != 0 & valid){
-          return res.status(200).json({ message: 'Changed role and deleted student' });
-        }
-        else if (resQ.rowCount !=0){
+        if ((resQ.rowCount != 0) & valid) {
+          return res
+            .status(200)
+            .json({ message: 'Changed role and deleted student' });
+        } else if (resQ.rowCount != 0) {
           return res.status(200).json({ message: 'Changed role' });
-        }
-          
-        else {
+        } else {
           return res
             .status(200)
             .json({ message: "Couldn't find user with given id" });
@@ -182,34 +228,8 @@ export const changeUserEmailByID = async (req, res) => {
   }
 };
 
-export const getAllUsers = (req, res) => {
-  let userList;
-  pool.connect((err, client, release) => {
-    if (err) {
-      return console.error('Error acquiring client', err.stack);
-    }
-    client
-      .query(
-        `select "id","name","lastname", "email","role" from "User"`
-      )
-      .then((resQ) => {
-        release();
-        userList = resQ.rows;
-        console.log(userList);
-        return res
-          .status(200)
-          .json({ message: 'All users List', userList });
-      });
-  });
-};
-
 export const editUserByID = async (req, res) => {
-  let {
-    id,
-    email,
-    name,
-    lastname
-  } = req.body;
+  let { id, email, name, lastname } = req.body;
 
   const userExistsValidUser = await userExists(id);
   if (userExistsValidUser) {
@@ -219,7 +239,7 @@ export const editUserByID = async (req, res) => {
       }
       client.query(
         `UPDATE "User" SET "email"='${email}', "name"='${name}', "lastname"='${lastname}' where "id"=${id};`,
-        (err,resQ) => { 
+        (err, resQ) => {
           release();
           if (err) {
             return res
@@ -232,13 +252,22 @@ export const editUserByID = async (req, res) => {
       );
     });
   } else {
-    return res
-      .status(409)
-      .json({ message: "There is no such user." });
+    return res.status(409).json({ message: 'There is no such user.' });
   }
 };
 
-
+export const deleteUserByID = (req, res) => {
+  let { id } = req.body;
+  pool.connect((err, client, release) => {
+    if (err) {
+      return console.error('Error acquiring client', err.stack);
+    }
+    client.query(`DELETE FROM "User" WHERE "id"=${id};`).then((resQ) => {
+      release();
+      return res.status(200).json({ message: 'Deleted user.' });
+    });
+  });
+};
 
 // INSERT INTO "Student" ("PESEL", "city", "street", "buildingNumber", "classRegisterNumber","ParentID","classID") VALUES(123456,'Częstochowa','Główna',1,6,1,1)
 

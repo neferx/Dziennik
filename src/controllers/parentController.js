@@ -42,6 +42,51 @@ export const addNewParent = async (req, res) => {
   }
 };
 
+export const getAllParents = (req, res) => {
+  let parentList;
+  pool.connect((err, client, release) => {
+    if (err) {
+      return console.error('Error acquiring client', err.stack);
+    }
+    client
+      .query(
+        `select "id","email","name","lastname","role","idParent","telephoneNumber" from "User" full join "Parent" on "User"."id"="Parent"."idParent" where "role" like 'PARENT'`
+      )
+      .then((resQ) => {
+        release();
+        parentList = resQ.rows;
+        return res
+          .status(200)
+          .json({ message: "Student's parent", parentList });
+      });
+  });
+};
+
+export const getParentByID = (req, res) => {
+  let idParent = req.params.idParent;
+  let userList;
+  pool.connect((err, client, release) => {
+    if (err) {
+      return console.error('Error acquiring client', err.stack);
+    }
+    client
+      .query(
+        `select "id","email","name","lastname","role","idParent","telephoneNumber" 
+        from "User" full join "Parent" on "User"."id"="Parent"."idParent" where "role" like 'PARENT' and "idParent"=${idParent}`
+      )
+      .then((resQ) => {
+        release();
+        if (resQ.rowCount == 0) {
+          return res
+            .status(200)
+            .json({ message: 'No parent with given ID: ', userList });
+        }
+        userList = resQ.rows;
+        return res.status(200).json({ message: 'Parent: ', userList });
+      });
+  });
+};
+
 export const getParentByStudentsId = (req, res) => {
   let { idStudent } = req.body;
   let parentList;
