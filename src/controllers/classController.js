@@ -126,3 +126,26 @@ export const getClassAndTeacherByID = (req, res) => {
     );
   });
 };
+
+export const getAllClassesSubjectsByID = (req, res) => {
+  let idClass = req.params.idClass;
+  let classesSubjectsList;
+  pool.connect((err, client, release) => {
+    if (err) {
+      return console.error('Error acquiring client', err.stack);
+    }
+    client
+      .query(
+        `select "classID","className", "subjectID","subjectName" from "ClassesSubjects" join "Class" on "ClassesSubjects"."classID"="Class"."idClass"
+          join "Subject" on "ClassesSubjects"."subjectID"="Subject"."idSubject" where "classID"=${idClass} `
+      )
+      .then((resQ) => {
+        release();
+        classesSubjectsList = resQ.rows;
+        console.log(classesSubjectsList);
+        return res
+          .status(200)
+          .json({ message: 'All classes subjects', classesSubjectsList });
+      });
+  });
+};

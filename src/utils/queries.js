@@ -119,6 +119,12 @@ export const createTeachersSubjects = `CREATE TABLE "TeachersSubjects" (
   OIDS=FALSE
 );`;
 
+export const createClassesSubjects = `CREATE TABLE "ClassesSubjects" (
+	"classID" integer NOT NULL,
+	"subjectID" integer NOT NULL
+) WITH (
+  OIDS=FALSE
+);`;
 
 // export const alterTable = `
 // ALTER TABLE "User" ADD CONSTRAINT "User_check_role"  CHECK ("role" = 'ADMIN' OR "role" = 'TEACHER' OR "role" = 'PARENT' OR "role" = 'STUDENT' or "role" = '')

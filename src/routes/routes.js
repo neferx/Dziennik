@@ -22,6 +22,7 @@ import {
   changeClassTeacher,
   getClassByID,
   getClassAndTeacherByID,
+  getAllClassesSubjectsByID,
   addNewStudent,
   addStudentToClass,
   getAllStudents,
@@ -48,6 +49,8 @@ import {
   getAllTeachersSubjectsByID,
   getAllTeachersWithAssignedSubject,
   addNewGrade,
+  assignNewSubjectToClassByID,
+  deleteClassesSubjectByID,
 } from '../controllers';
 const indexRouter = express.Router();
 
@@ -109,6 +112,12 @@ indexRouter.post(
   assignNewSubjectToTeacherByID
 );
 indexRouter.delete('/DeleteTeachersSubjectByIDs', deleteTeachersSubjectByIDs);
+indexRouter.post('/assignNewSubjectToClassByID', assignNewSubjectToClassByID);
+indexRouter.delete('/deleteClassesSubjectByID', deleteClassesSubjectByID);
 indexRouter.post('/AddNewGrade', addNewGrade);
+indexRouter.get(
+  '/getAllClassesSubjectsByID/:idClass',
+  getAllClassesSubjectsByID
+);
 
 export default indexRouter;
