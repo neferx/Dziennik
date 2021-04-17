@@ -51,6 +51,13 @@ import {
   addNewGrade,
   assignNewSubjectToClassByID,
   deleteClassesSubjectByID,
+  getAllStudentGrades,
+  getAllStudentSubjectGrades,
+  addNewAbsence,
+  getAbsenceByID,
+  getAllStudentAbsences,
+  getAllStudentUnexcusedAbsences,
+  excuseAbsenceByID,
 } from '../controllers';
 const indexRouter = express.Router();
 
@@ -103,7 +110,10 @@ indexRouter.get('/GetAllUsers', getAllUsers);
 indexRouter.post('/AddNewRemark', addNewRemark);
 indexRouter.delete('/DeleteRemarkByID', deleteRemarkByID);
 indexRouter.get('/GetAllRemarks', getAllRemarks);
-indexRouter.get('/GetAllRemarksByStudentID', getAllRemarksByStudentID);
+indexRouter.get(
+  '/GetAllRemarksByStudentID/:studentID',
+  getAllRemarksByStudentID
+);
 indexRouter.post('/AddNewSubject', addNewSubject);
 indexRouter.get('/GetAllSubjects', getAllSubjects);
 indexRouter.delete('/DeleteSubjectByID', deleteSubjectByID);
@@ -115,9 +125,23 @@ indexRouter.delete('/DeleteTeachersSubjectByIDs', deleteTeachersSubjectByIDs);
 indexRouter.post('/assignNewSubjectToClassByID', assignNewSubjectToClassByID);
 indexRouter.delete('/deleteClassesSubjectByID', deleteClassesSubjectByID);
 indexRouter.post('/AddNewGrade', addNewGrade);
+indexRouter.get('/getAllStudentGrades/:studentID', getAllStudentGrades);
+indexRouter.get(
+  '/getAllStudentSubjectGrades/:studentID/:subjectID',
+  getAllStudentSubjectGrades
+);
+
 indexRouter.get(
   '/getAllClassesSubjectsByID/:idClass',
   getAllClassesSubjectsByID
 );
+indexRouter.post('/addNewAbsence', addNewAbsence);
+indexRouter.get('/getAbsenceByID/:idAbsence', getAbsenceByID);
+indexRouter.get('/getAllStudentAbsences/:idStudent', getAllStudentAbsences);
+indexRouter.get(
+  '/getAllStudentUnexcusedAbsences/:idStudent',
+  getAllStudentUnexcusedAbsences
+);
+indexRouter.patch('/excuseAbsenceByID/:idAbsence', excuseAbsenceByID);
 
 export default indexRouter;

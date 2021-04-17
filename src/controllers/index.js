@@ -9,3 +9,4 @@ export * from './subjectController';
 export * from './teachersSubjectsController';
 export * from './classesSubjectsController';
 export * from './gradesController';
+export * from './absenceController';
